@@ -66,60 +66,185 @@
     <div id="container">
       <div id="main">
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/11/30/apache中vhost配置以及常见的问题/" title="apache中vhost配置以及常见的问题" itemprop="url">
-  
-    <h1 itemprop="name">apache中vhost配置以及常见的问题</h1>
+   
     
-     
-           <p itemprop="description" >这章专门说说apache配置中的相关问题，解决问题没烦恼。# vhost## 啥是vhost，后来发现就是vhost apache的虚拟主机，可在同一IP配置更多的域名，相当于一个文档目录的外部链接。对于它的配置有很多作用，这个以后再说，今天讲讲怎么配置它。##### vhost</p>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/30/apache中vhost配置以及常见的问题/" title="apache中vhost配置以及常见的问题" itemprop="url">apache中vhost配置以及常见的问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="maozi" target="_blank" itemprop="author">maozi</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-30T09:25:33.000Z" itemprop="datePublished"> 发表于 2015-11-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
-    
-    <time datetime="2015-11-30T09:25:33.000Z" itemprop="datePublished">2015-11-30</time>
-  </a>
-</section>
+        <font size="5"> 这章专门说说apache配置中的相关问题，解决问题没烦恼。<br><br># vhost<br><br><br>## <strong><em>啥是vhost</em></strong>，后来发现就是vhost apache的虚拟主机，可在<strong>同一IP配置更多的域名</strong>，相当于一个文档目录的外部链接。<br><br>对于它的配置有很多作用，这个以后再说，今天讲讲怎么配置它。<br><br>##### vhost的所在路径：<br><code>phptools\apache2.4\Apache24\conf\extra\httpd-vhosts.conf</code><br><br>在里面输入以下的内容：<br><br><figure class="highlight"><figcaption><span>*:80></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DocumentRoot &#34;D:/Learning Laravel 4 Application Development_code/diych3/learnlaravel/public&#34;  #&#31243;&#24207;&#25152;&#22312;&#30340;&#36335;&#24452;&#10;ServerName laravel.diy&#10;&#60;Directory &#34;D:/Learning Laravel 4 Application Development_code/diych3/learnlaravel/public&#34;&#62;  #&#31243;&#24207;&#25152;&#22312;&#30340;&#36335;&#24452;&#10;    AllowOverride All&#10;    Require all granted&#10;&#60;/Directory&#62;&#10;&#60;/VirtualHost&#62;</span><br></pre></td></tr></table></figure><br><br>到这里，你已经成功了一半了，接下来要做的就是  那另一半。<br><br>不过这里有一个问题要啰嗦一下，那就是上述中的<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AllowOverride <span class="literal">All</span></span><br><span class="line"><span class="keyword">Require</span> <span class="literal">all</span> granted</span><br></pre></td></tr></table></figure><br><br>##### AllowOverride All<br><br>AllowOverride参数就是指明Apache服务器是否去<strong>找.htacess文件作为配置文件</strong>，<br><br>如果设置为none,那么服务器将忽略.htacess文件，<br><br>如果设置为All,那么所有在.htaccess文件里有的指令都将被重写。对于AllowOverride，还可以对它指定如下一些能被重写的指令类型.<br><br>通常利用Apache的rewrite模块对 URL 进行重写的时候， <em>rewrite规则会写在 .htaccess 文件里。</em><br><br>但要使 apache 能够正常的读取.htaccess文件的内容，就必须对.htaccess所在目录进行配置。<br><br><strong>从安全性考虑，根目录的AllowOverride属性一般都配置成不允许任何Override.</strong><br><br>也就是说，如果没有开启AllowOverride ，那么 apache将 忽略 .htaccess ,从而无法重写 URL， 当然更就无法找到路径。<br><br>##### Require all granted<br><br>讲讲它在apache中的版本区别：<br><br>在apache2.4版本之前做客户端访问控制,是用Allow Deny Order指令做访问控制的,而<strong>在2.4的版本上是用的用法完全不同</strong>；<br> <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">2</span>.2上的配置</span><br><span class="line"><span class="keyword"><span class="common">Order</span></span> deny,allow</span><br><span class="line"><span class="keyword"><span class="common">Deny</span></span> from <span class="literal">all</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">2</span>.4上的配置</span><br><span class="line"><span class="keyword">Require</span> <span class="literal">all</span> denied</span><br><span class="line"></span><br><span class="line"><span class="comment">################################################</span></span><br><span class="line"><span class="keyword">2</span>.2上的配置</span><br><span class="line"><span class="keyword"><span class="common">Order</span></span> allow,deny</span><br><span class="line"><span class="keyword"><span class="common">Allow</span></span> from <span class="literal">all</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">2</span>.4上的配置</span><br><span class="line"><span class="keyword">Require</span> <span class="literal">all</span> granted</span><br><span class="line"></span><br><span class="line"><span class="keyword">Require</span> <span class="literal">all</span> granted : 允许所有；</span><br><span class="line"><span class="keyword">Require</span> <span class="literal">all</span> denied : 禁止所有；</span><br><span class="line"><span class="keyword"><span class="common">Order</span></span> deny , allow 先禁止，后允许；</span><br><span class="line"><span class="keyword"><span class="common">Deny</span></span> from <span class="literal">all</span> 禁止所有；</span><br></pre></td></tr></table></figure><br><br>## 最后的另一半<br>##### Mod_rewrite.so<br> Mod_rewrite.so 在服务器级的(httpd.conf)和目录级的(.htaccess)配置都有效。必须去掉前面的注释符号。<br> 路径是：<code>D:\phptools\apache2.4\Apache24\conf\httpd.conf</code><br><br> ##### 域名映射<br> ‘C:/WINDOWS/system32/drivers/etc’ 中的host 要加入你的域名映射<br> <code>127.0.0.1  www.maocic.com(你的域名)</code></font>
 
 
 
 
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/23/test/" title="test" itemprop="url">
-  
-    <h1 itemprop="name">test</h1>
-    
-     
-           <p itemprop="description" >#just testIf it is right ��I can go step��</p>
         
-    
-    <time datetime="2015-09-23T06:37:33.000Z" itemprop="datePublished">2015-09-23</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/23/hello-world/" title="Hello World" itemprop="url">
-  
-    <h1 itemprop="name">Hello World</h1>
-    
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
         
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/apache-vhost-AllowOverride-All-Require-all-granted-域名映射/">apache vhost AllowOverride All Require all granted 域名映射</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/30/apache中vhost配置以及常见的问题/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/30/apache中vhost配置以及常见的问题/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2015-09-23T02:50:56.757Z" itemprop="datePublished">2015-09-23</time>
-  </a>
-</section>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/23/test/" title="test" itemprop="url">test</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="maozi" target="_blank" itemprop="author">maozi</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-23T06:37:33.000Z" itemprop="datePublished"> 发表于 2015-09-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>#just test<br>If it is right ��I can go step��</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/test/">test</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/hello-tags/">hello tags</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/23/test/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/23/test/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/23/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="maozi" target="_blank" itemprop="author">maozi</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-23T02:50:56.757Z" itemprop="datePublished"> 发表于 2015-09-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/23/hello-world/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/23/hello-world/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
 
 
 
