@@ -85,7 +85,7 @@
 </header>
     <div class="article-content">
         
-        <font size=5> 这章专门说说apache配置中的相关问题，解决问题没烦恼。<br><br># vhost<br><br><br>## <strong><em>啥是vhost</em></strong>，后来发现就是vhost apache的虚拟主机，可在<strong>同一IP配置更多的域名</strong>，相当于一个文档目录的外部链接。<br><br>对于它的配置有很多作用，这个以后再说，今天讲讲怎么配置它。<br><br>##### vhost的所在路径：<br><code>phptools\apache2.4\Apache24\conf\extra\httpd-vhosts.conf</code><br><br>在里面输入以下的内容：<br><br><figure class="highlight"><figcaption><span>*:80></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DocumentRoot &#34;D:/Learning Laravel 4 Application Development_code/diych3/learnlaravel/public&#34;  #&#31243;&#24207;&#25152;&#22312;&#30340;&#36335;&#24452;&#10;ServerName laravel.diy&#10;&#60;Directory &#34;D:/Learning Laravel 4 Application Development_code/diych3/learnlaravel/public&#34;&#62;  #&#31243;&#24207;&#25152;&#22312;&#30340;&#36335;&#24452;&#10;    AllowOverride All&#10;    Require all granted&#10;&#60;/Directory&#62;&#10;&#60;/VirtualHost&#62;</span><br></pre></td></tr></table></figure><br><br>到这里，你已经成功了一半了，接下来要做的就是  那另一半。<br><br>
+        <font size=5> 这章专门说说apache配置中的相关问题，解决问题没烦恼。<br><br># vhost<br><br><br>## <strong><em>啥是vhost</em></strong>，后来发现就是vhost apache的虚拟主机，可在<strong>同一IP配置更多的域名</strong>，相当于一个文档目录的外部链接。<br><br>对于它的配置有很多作用，这个以后再说，今天讲讲怎么配置它。<br><br>
         
         
         <p class="article-more-link">
@@ -100,7 +100,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/apache-vhost-AllowOverride-All-Require-all-granted-域名映射/">apache vhost AllowOverride All Require all granted 域名映射</a>
+  <span></span> <a href="/tags/域名映射/">域名映射</a>
   </div>
 
 </div>
@@ -280,7 +280,7 @@
 			
 		
 			
-				<li><a href="/tags/apache-vhost-AllowOverride-All-Require-all-granted-域名映射/" title="apache vhost AllowOverride All Require all granted 域名映射">apache vhost AllowOverride All Require all granted 域名映射<sup>1</sup></a></li>
+				<li><a href="/tags/域名映射/" title="域名映射">域名映射<sup>1</sup></a></li>
 			
 		
 		</ul>
